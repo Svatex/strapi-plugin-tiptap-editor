@@ -7,6 +7,7 @@ import { FeatureGuard } from './FeatureGuard';
 import { TiptapInputProps, useTiptapEditor } from '../utils/tiptapUtils';
 import { Spacer } from './Spacer';
 import { useStarterKit } from '../extensions/StarterKit';
+import { useRichTextComponents } from '../extensions/Components';
 import { useLink } from '../extensions/Link';
 import { useHeading } from '../extensions/Heading';
 import { useImage } from '../extensions/Image';
@@ -17,7 +18,11 @@ import { useTextColor } from '../extensions/TextColor';
 import { useHighlightColor } from '../extensions/HighlightColor';
 import { usePresetConfig } from '../hooks/usePresetConfig';
 import { buildExtensions } from '../utils/buildExtensions';
-import { TiptapPresetConfig, MINIMAL_PRESET_CONFIG, getFeatureOptions } from '../../../shared/types';
+import {
+  TiptapPresetConfig,
+  MINIMAL_PRESET_CONFIG,
+  getFeatureOptions,
+} from '../../../shared/src/types';
 
 // ─── Inner editor ────────────────────────────────────────────────────────────
 // Mounted only AFTER preset config is resolved, so useEditor receives the
@@ -47,6 +52,7 @@ const InnerEditor = forwardRef<HTMLDivElement, InnerEditorProps>(
     const textAlign = useTextAlign(editor, { disabled: props.disabled });
     const textColor = useTextColor(editor, { disabled: props.disabled });
     const highlightColor = useHighlightColor(editor, { disabled: props.disabled });
+    const components = useRichTextComponents(editor, { config, disabled: props.disabled });
 
     if (!editor) return null;
 
@@ -125,6 +131,11 @@ const InnerEditor = forwardRef<HTMLDivElement, InnerEditorProps>(
             {table.addRowButton}
             {table.removeRowButton}
             {table.tableDialog}
+          </FeatureGuard>
+          <FeatureGuard featureValue={config?.components}>
+            <Spacer width={8} />
+            {components.componentsMenu}
+            {components.componentDialog}
           </FeatureGuard>
         </BaseTiptapInput>
       </EditorErrorBoundary>
