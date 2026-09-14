@@ -40,7 +40,7 @@ const InnerEditor = forwardRef<HTMLDivElement, InnerEditorProps>(
       return buildExtensions(config);
     }, [presetName]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const { editor, field } = useTiptapEditor(props.name, '', extensions);
+    const { editor, field, removedContent } = useTiptapEditor(props.name, '', extensions);
 
     const starterKit = useStarterKit(editor, { disabled: props.disabled });
     const headingOptions = getFeatureOptions(config.heading, { levels: [1, 2, 3, 4, 5, 6] });
@@ -64,6 +64,7 @@ const InnerEditor = forwardRef<HTMLDivElement, InnerEditorProps>(
           {...props}
           ref={forwardedRef}
           noPresetConfigured={!presetName}
+          removedContent={removedContent}
         >
           <FeatureGuard featureValue={config?.heading}>
             {heading.headingSelect}
