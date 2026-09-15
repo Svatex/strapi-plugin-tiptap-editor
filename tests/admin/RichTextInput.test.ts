@@ -368,6 +368,18 @@ describe('RichTextInput', () => {
     expect(featureGuards.some((fg) => fg.props?.featureValue === config.highlightColor)).toBe(true);
   });
 
+  it("passes the hook's contentError flag to BaseTiptapInput", () => {
+    mockUseTiptapEditor.mockReturnValueOnce({
+      editor: mockEditor,
+      field: mockField,
+      removedContent: null,
+      contentError: true,
+    } as any);
+    const result = RichTextInput({ name: 'content' } as any, null) as any;
+    const [base] = findElements(result, 'BaseTiptapInput');
+    expect(base.props.contentError).toBe(true);
+  });
+
   it('wraps the components menu in a FeatureGuard keyed on config.components', () => {
     const config = { ...MINIMAL_PRESET_CONFIG, components: { button: true } };
     mockUsePresetConfig.mockReturnValue({ config, isLoading: false });
